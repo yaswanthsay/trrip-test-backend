@@ -16,6 +16,10 @@ app.use(express.json());
 
 app.use(cors());
 
+app.get("/", (req, res) => {
+  res.send("Backend is running successfully 🚀");
+});
+
 app.post("/register", async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
@@ -98,7 +102,7 @@ app.post("/login", async (req, res) => {
         userId: user._id,
         email: user.email,
       },
-      "mySecretKey",
+       process.env.JWT_SECRET,
       {
         expiresIn: "7d",
       }
@@ -451,12 +455,14 @@ app.get("/recent-bookings/:userId", async (req, res) => {
   }
 });
 
+const PORT = process.env.PORT || 3000;
+
 mongoose
-  .connect("mongodb://trrip-123:trrip%40123@ac-af0x47i-shard-00-00.i4vgxvp.mongodb.net:27017,ac-af0x47i-shard-00-01.i4vgxvp.mongodb.net:27017,ac-af0x47i-shard-00-02.i4vgxvp.mongodb.net:27017/trripSample?ssl=true&replicaSet=atlas-wcmn0w-shard-0&authSource=admin&appName=Cluster0")
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("MongoDB Connected");
 
-    app.listen(3000, () => {
+    app.listen(PORT, () => {
       console.log("Server running on port 3000");
     });
   })
